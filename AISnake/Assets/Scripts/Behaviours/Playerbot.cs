@@ -5,8 +5,13 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "AIBehaviours/Playerbot")]
 public class Playerbot : AIBehaviour
 {
+    public Vector3 waypoint = new Vector3(0, 0, 0);
 
-    Vector2 waypoint;
+    public float detectionRadius = 1000;
+    public string tagEnemyBoy = "bot";
+    public string tagComidas = "Orb";
+
+
 
     public override void Init(GameObject own, SnakeMovement ownMove)
     {
@@ -18,7 +23,6 @@ public class Playerbot : AIBehaviour
 
     public override void Execute()
     {
-        waypoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
         MoveForward();
     }
@@ -26,39 +30,59 @@ public class Playerbot : AIBehaviour
     //ia basica, move, muda de direcao e move
     void MoveForward()
     {
-        MouseRotationSnake();
+        
         owner.transform.position = Vector2.MoveTowards(owner.transform.position, waypoint, ownerMovement.speed * Time.deltaTime);
     }
 
-    void MouseRotationSnake()
-    {
-
-        direction = Camera.main.ScreenToWorldPoint(Input.mousePosition) - owner.transform.position;
-        direction.z = 0.0f;
-
-        float angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
-        Quaternion rotation = Quaternion.AngleAxis(-angle, Vector3.forward);
-        owner.transform.rotation = Quaternion.Slerp(owner.transform.rotation, rotation, ownerMovement.speed * Time.deltaTime);
-    }
 
     IEnumerator UpdateDirEveryXSeconds(float x)
     {
         yield return new WaitForSeconds(x);
-        ownerMovement.StopCoroutine(UpdateDirEveryXSeconds(x));
-        randomPoint = new Vector3(
-                Random.Range(
-                    Random.Range(owner.transform.position.x - 10, owner.transform.position.x - 5),
-                    Random.Range(owner.transform.position.x + 5, owner.transform.position.x + 10)
-                ),
-                Random.Range(
-                    Random.Range(owner.transform.position.y - 10, owner.transform.position.y - 5),
-                    Random.Range(owner.transform.position.y + 5, owner.transform.position.y + 10)
-                ),
-                0
-            );
-        direction = randomPoint - owner.transform.position;
+        ownerMovement.StopCoroutine(UpdateDirEveryXSeconds(1));
+
+        Collider[] hitColliders = Physics.OverlapSphere(owner.transform.position, detectionRadius);
+        List<Vector2> comidas = new List<Vector2>();
+        List<Vector2> bots = new List<Vector2>();
+
+
+        float menorDistancia = detectionRadius * 10;
+       // float menorDistanciaPos = -1;
+
+        foreach (var hitCollider in hitColliders)
+        {
+            if (hitCollider.CompareTag(tagComidas))
+            {
+                comidas.Add(hitCollider.GetComponent<Transform>().position);
+                Debug.Log("colisão");
+
+            }
+        }
+        
+        if (bots.Count < 1)
+        {
+            Vector2[] comidasArray = comidas.ToArray();
+
+
+
+            for (int i = 0; i < comidasArray.Length; i++)
+            {
+                if(Vector2.Distance(owner.transform.position, comidasArray[i]) < menorDistancia)
+                {
+                    menorDistancia = Vector2.Distance(owner.transform.position, comidasArray[i]);
+
+                    waypoint = comidasArray[i];
+                    //enorDistanciaPos = -1;
+                }
+            }
+        }
+
+
+        direction = waypoint - owner.transform.position;
         direction.z = 0.0f;
 
         ownerMovement.StartCoroutine(UpdateDirEveryXSeconds(x));
     }
+
+
+
 }

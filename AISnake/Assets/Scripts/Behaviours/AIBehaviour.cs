@@ -10,10 +10,13 @@ public class AIBehaviour : ScriptableObject
 
     public float timeChangeDir;
     public Vector3 randomPoint;
+
+
     public virtual void Init(GameObject own, SnakeMovement ownMove)
     {
         direction = new Vector3(0, 0, 0);
         randomPoint = new Vector3(0, 0, 0);
+       
 
         owner = own;
         ownerMovement = ownMove;
