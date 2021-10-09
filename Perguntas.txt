@@ -1,0 +1,41 @@
+• O agente movimenta-se sozinho ou em grupo?
+- Sozinho
+
+• O comportamento do agente precisa ser realista?
+- Não
+
+• O agente possui restrições de movimento?
+- Somente no dash
+
+• Movimento precisa ser simulado fisicamente (Física Mecânica)?
+- Não
+
+• Movimento é influenciado/coordenado por outro agente?
+- Sim, é influenciado pelas outras cobras (Bots) e pelas comidinhas
+
+• Quais as ações que o agente precisa fazer? Considerar todas as possíveis ações.
+- Mover-se para comidinha
+- Mover-se para encurralar o inimigo pela frente
+- Mover-se na direção oposta de um inimigo muito maior
+
+• Quais os estados que o agente pode assumir?
+- "Comer livremente"
+- "Encurralar inimigo"
+- "Fugir do inimigo"
+
+• Quando muda de comportamento? O que causa essa mudança?
+- Quando não tem nenhum inimigo em volta, o jogador apenas come
+- Quando um inimigo de tamanho similar estiver próximo, o jogador tenta encurralar pela frente
+- Quando um inimigo muito maior estiver próximo, o jogador foge
+
+• Algum outro agente precisa ser observado para tomar decisão?
+- Outros bots
+
+• Precisa saber o resultado das ações de outros agentes?
+- Sim, precisa saber o ponto futuro dos outros bots
+
+• Muda as decisões conforme as ações do jogador?
+- Não, o jogador apenas observa a execução do bot
+
+• Precisa ter algum tipo de aprendizado/adaptação?
+- A princípio não, talvez se o ponto futuro do inimigo encaixar-se neste tópico, aí sim

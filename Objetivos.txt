@@ -1,0 +1,10 @@
+> Aprender a usar maquina de estados
+
+> Cálculo do ponto futuro
+
+> Raio de detecção
+	> if(!inimigo) = waypoint(comida mais próxima) 
+	> if(inimigo==grande) = waypoint(comidinha mais distante do inimigo)
+	> if(inimigo==normal) = waypoint(ponto futuro do inimigo + x)
+
+>

@@ -6,6 +6,7 @@ using UnityEngine;
 public class Playerbot : AIBehaviour
 {
 
+    Vector2 waypoint;
 
     public override void Init(GameObject own, SnakeMovement ownMove)
     {
@@ -17,6 +18,8 @@ public class Playerbot : AIBehaviour
 
     public override void Execute()
     {
+        waypoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
         MoveForward();
     }
 
@@ -24,7 +27,7 @@ public class Playerbot : AIBehaviour
     void MoveForward()
     {
         MouseRotationSnake();
-        owner.transform.position = Vector2.MoveTowards(owner.transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition), ownerMovement.speed * Time.deltaTime);
+        owner.transform.position = Vector2.MoveTowards(owner.transform.position, waypoint, ownerMovement.speed * Time.deltaTime);
     }
 
     void MouseRotationSnake()

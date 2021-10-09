@@ -1,0 +1,26 @@
+if(distance < 100 && (tag = "inimigo" || tag = "comida"))
+{ 
+if (inimigo) inimigoList = object 
+if (comida) comidaList = object 
+} 
+.
+if ( inimigoList != NULL )
+{
+     for (inimigo)
+  { menorDistância = inimigo }
+
+     if (menorDistância = grande)
+     {
+          waypoint = Flee(menorDistância)
+     }
+     else if (menorDistância = normal)
+     {
+          waypoint = PontoFuturo(menorDistância )
+     }
+}
+else ( comidaList != NULL)
+{
+     for (comidas)
+     { menorDistâsncia = comida }
+waypoint = menorDistância
+}
