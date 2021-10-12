@@ -7,7 +7,7 @@ public class Playerbot : AIBehaviour
 {
     public Vector3 waypoint = new Vector3(0, 0, 0);
 
-    public float detectionRadius = 1000;
+    public float detectionRadius = 100f;
     public string tagEnemyBoy = "bot";
     public string tagComidas = "Orb";
 
@@ -39,15 +39,16 @@ public class Playerbot : AIBehaviour
     {
         yield return new WaitForSeconds(x);
         ownerMovement.StopCoroutine(UpdateDirEveryXSeconds(1));
-
-        Collider[] hitColliders = Physics.OverlapSphere(owner.transform.position, detectionRadius);
+        //Collider[] hitColliders = Physics.OverlapSphere(owner.transform.position, detectionRadius);
+        Collider2D[] hitColliders = Physics2D.OverlapCircleAll(owner.transform.position, detectionRadius);
         List<Vector2> comidas = new List<Vector2>();
         List<Vector2> bots = new List<Vector2>();
 
 
         float menorDistancia = detectionRadius * 10;
-       // float menorDistanciaPos = -1;
+        // float menorDistanciaPos = -1;
 
+      
         foreach (var hitCollider in hitColliders)
         {
             if (hitCollider.CompareTag(tagComidas))
@@ -57,7 +58,7 @@ public class Playerbot : AIBehaviour
 
             }
         }
-        
+
         if (bots.Count < 1)
         {
             Vector2[] comidasArray = comidas.ToArray();

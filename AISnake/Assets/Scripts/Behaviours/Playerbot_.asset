@@ -17,3 +17,7 @@ MonoBehaviour:
   ownerMovement: {fileID: 0}
   timeChangeDir: 1
   randomPoint: {x: 0, y: 0, z: 0}
+  waypoint: {x: 0, y: 0, z: 0}
+  detectionRadius: 100
+  tagEnemyBoy: bot
+  tagComidas: Orb
