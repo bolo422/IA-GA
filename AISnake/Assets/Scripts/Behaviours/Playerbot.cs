@@ -12,7 +12,10 @@ public class Playerbot : AIBehaviour
     public string bodyTag = "Body";
     public string orbTag = "Orb";
 
-   // bool encontrouInimigo = false;
+    // bool encontrouInimigo = false;
+
+    // MUDE O COMPORTAMENTO DA COBRINHA:
+    bool correrParaMatar = false;
 
 
 
@@ -32,7 +35,7 @@ public class Playerbot : AIBehaviour
     //ia basica, move, muda de direcao e move
     void MoveForward()
     {
-        
+ 
         owner.transform.position = Vector2.MoveTowards(owner.transform.position, waypoint, ownerMovement.speed * Time.deltaTime);
         
     }
@@ -83,8 +86,9 @@ public class Playerbot : AIBehaviour
                     waypoint = orbsArray[i];
                 }
             }
+
+            
         }
-        //// a partir daqui está em desenvolvimento, se usar oq tem aicmas já funciona para seguir as comidas
 
         else if (orbs.Count > 0)
         {
@@ -117,6 +121,11 @@ public class Playerbot : AIBehaviour
                     botComMenorDistancia = botsArray[i];
                 }
             }
+            if (correrParaMatar)
+            {
+                ownerMovement.isRunning = false;
+                ownerMovement.speed = ownerMovement.speedWalking;
+            }
             if (menorDistanciaOrbs >= menorDistanciaBots)
             {
                 
@@ -140,6 +149,12 @@ public class Playerbot : AIBehaviour
                 float mult = 1.5f;
                 pf = new Vector2(pf.x + mult, pf.y + mult);
                 waypoint = pf;
+
+                if (correrParaMatar)
+                {
+                    ownerMovement.isRunning = true;
+                    ownerMovement.speed = ownerMovement.speedRunning;
+                }
 
             }
             else
@@ -187,6 +202,12 @@ public class Playerbot : AIBehaviour
             float mult = 1.5f;
             pf = new Vector2(pf.x + mult, pf.y + mult);
             waypoint = pf;
+
+            if (correrParaMatar)
+            {
+                ownerMovement.isRunning = true;
+                ownerMovement.speed = ownerMovement.speedRunning;
+            }
         }
         else
         {
@@ -207,19 +228,37 @@ public class Playerbot : AIBehaviour
         ContactFilter2D filter = new ContactFilter2D(); // Declaração do filtro
         filter.layerMask = LayerMask.NameToLayer("UI"); // Remove objetos na Layer UI, coloquei o meu Game Logic nesta Layer
         RaycastHit2D[] ray = new RaycastHit2D[2]; // Array com 2 posições pq no meu bot só preciso da segunda, mas pode usar um valor maior se precisar de mais colisões
-        Vector2 movimento = new Vector2(owner.transform.position.x - waypoint.x, owner.transform.position.y - waypoint.y);
-        Physics2D.Raycast(owner.transform.position, movimento, filter, ray); // Aplicação do raycast
-
+        Physics2D.Raycast(owner.transform.position, waypoint, filter, ray); // Aplicação do raycast
+        Debug.DrawRay(owner.transform.position, waypoint);
         if (ray[1]) // Agora é só tratar o Collider como seria feito normalmente
         {
-            Debug.Log(ray[1].collider.name);
+            //Debug.Log(ray[1].collider.name);
 
             if(Vector2.Distance(owner.transform.position, ray[1].collider.transform.position) < 20 && (ray[1].collider.CompareTag(bodyTag) || ray[1].collider.CompareTag(botTag)))
             {
                 waypoint = new Vector3(waypoint.x * -1, waypoint.y * -1, waypoint.z);
-                Debug.Log("invertendo");
+               // Debug.Log("invertendo");
             }
         }
+
+        if (!correrParaMatar)
+        {
+            if (Vector2.Distance(owner.transform.position, waypoint) > 3 && ownerMovement.isRunning == false)
+            {
+                ownerMovement.isRunning = true;
+                ownerMovement.speed = ownerMovement.speedRunning;
+                //Debug.Log("RUNNING");
+            }
+            else if (Vector2.Distance(owner.transform.position, waypoint) < 3 && ownerMovement.isRunning == true)
+            {
+                ownerMovement.isRunning = false;
+                ownerMovement.speed = ownerMovement.speedWalking;
+                // Debug.Log("WALING");
+
+            }
+        }
+
+
 
         direction = waypoint - owner.transform.position;
         direction.z = 0.0f;
