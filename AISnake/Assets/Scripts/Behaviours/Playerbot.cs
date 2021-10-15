@@ -49,9 +49,11 @@ public class Playerbot : AIBehaviour
         List<Vector2> bodys = new List<Vector2>();
 
 
+
+
         // float menorDistanciaPos = -1;
 
-      
+
         foreach (var hitCollider in hitColliders)
         {
             if (hitCollider.CompareTag(orbTag))
@@ -115,10 +117,9 @@ public class Playerbot : AIBehaviour
                     botComMenorDistancia = botsArray[i];
                 }
             }
-            Debug.Log("maq2");
             if (menorDistanciaOrbs >= menorDistanciaBots)
             {
-                Debug.Log("maq3");
+                
                 Vector2[] bodysArray = bodys.ToArray();
                 float menorDistanciaBodyToBot = detectionRadius * 10;
                 Vector2 bodyComMenorDistancia = new Vector2(); ;
@@ -139,7 +140,6 @@ public class Playerbot : AIBehaviour
                 float mult = 1.5f;
                 pf = new Vector2(pf.x + mult, pf.y + mult);
                 waypoint = pf;
-                Debug.Log("pf");
 
             }
             else
@@ -166,9 +166,7 @@ public class Playerbot : AIBehaviour
                     botComMenorDistancia = botsArray[i];
                 }
             }
-            Debug.Log("maq2");
 
-            Debug.Log("maq3");
             Vector2[] bodysArray = bodys.ToArray();
             float menorDistanciaBodyToBot = detectionRadius * 10;
             Vector2 bodyComMenorDistancia = new Vector2(); ;
@@ -189,7 +187,6 @@ public class Playerbot : AIBehaviour
             float mult = 1.5f;
             pf = new Vector2(pf.x + mult, pf.y + mult);
             waypoint = pf;
-            Debug.Log("pf");
         }
         else
         {
@@ -207,6 +204,24 @@ public class Playerbot : AIBehaviour
             
         }
 
+        ContactFilter2D filter = new ContactFilter2D(); // Declaração do filtro
+        filter.layerMask = LayerMask.NameToLayer("UI"); // Remove objetos na Layer UI, coloquei o meu Game Logic nesta Layer
+        RaycastHit2D[] ray = new RaycastHit2D[2]; // Array com 2 posições pq no meu bot só preciso da segunda, mas pode usar um valor maior se precisar de mais colisões
+        Vector2 movimento = new Vector2(owner.transform.position.x - waypoint.x, owner.transform.position.y - waypoint.y);
+        Physics2D.Raycast(owner.transform.position, movimento, filter, ray); // Aplicação do raycast
+
+        if (ray[1]) // Agora é só tratar o Collider como seria feito normalmente
+        {
+            Debug.Log(ray[1].collider.name);
+        }
+
+
+        if(Vector2.Distance(owner.transform.position, ray[1].collider.transform.position) < 20 && (ray[1].collider.CompareTag(bodyTag) || ray[1].collider.CompareTag(botTag)))
+        {
+            waypoint = new Vector3(waypoint.x * -1, waypoint.y * -1, waypoint.z);
+            Debug.Log("invertendo");
+        }
+        }
 
         direction = waypoint - owner.transform.position;
         direction.z = 0.0f;
