@@ -213,14 +213,12 @@ public class Playerbot : AIBehaviour
         if (ray[1]) // Agora é só tratar o Collider como seria feito normalmente
         {
             Debug.Log(ray[1].collider.name);
-        }
 
-
-        if(Vector2.Distance(owner.transform.position, ray[1].collider.transform.position) < 20 && (ray[1].collider.CompareTag(bodyTag) || ray[1].collider.CompareTag(botTag)))
-        {
-            waypoint = new Vector3(waypoint.x * -1, waypoint.y * -1, waypoint.z);
-            Debug.Log("invertendo");
-        }
+            if(Vector2.Distance(owner.transform.position, ray[1].collider.transform.position) < 20 && (ray[1].collider.CompareTag(bodyTag) || ray[1].collider.CompareTag(botTag)))
+            {
+                waypoint = new Vector3(waypoint.x * -1, waypoint.y * -1, waypoint.z);
+                Debug.Log("invertendo");
+            }
         }
 
         direction = waypoint - owner.transform.position;
