@@ -36,8 +36,13 @@ public class Playerbot : AIBehaviour
     void MoveForward()
     {
  
+        //owner.transform.position = Vector2.MoveTowards(owner.transform.position, waypoint, ownerMovement.speed * Time.deltaTime);
+
+        float angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
+        Quaternion rotation = Quaternion.AngleAxis(-angle, Vector3.forward);
+        owner.transform.rotation = Quaternion.Slerp(owner.transform.rotation, rotation, ownerMovement.speed * 100);
+
         owner.transform.position = Vector2.MoveTowards(owner.transform.position, waypoint, ownerMovement.speed * Time.deltaTime);
-        
     }
 
 
@@ -54,7 +59,6 @@ public class Playerbot : AIBehaviour
 
 
 
-        // float menorDistanciaPos = -1;
 
 
         foreach (var hitCollider in hitColliders)
@@ -227,17 +231,32 @@ public class Playerbot : AIBehaviour
 
         ContactFilter2D filter = new ContactFilter2D(); // Declaração do filtro
         filter.layerMask = LayerMask.NameToLayer("UI"); // Remove objetos na Layer UI, coloquei o meu Game Logic nesta Layer
-        RaycastHit2D[] ray = new RaycastHit2D[2]; // Array com 2 posições pq no meu bot só preciso da segunda, mas pode usar um valor maior se precisar de mais colisões
-        Physics2D.Raycast(owner.transform.position, waypoint, filter, ray); // Aplicação do raycast
-        Debug.DrawRay(owner.transform.position, waypoint);
-        if (ray[1]) // Agora é só tratar o Collider como seria feito normalmente
-        {
-            //Debug.Log(ray[1].collider.name);
+        RaycastHit2D[] ray1 = new RaycastHit2D[2];// Array com 2 posições pq no meu bot só preciso da segunda, mas pode usar um valor maior se precisar de mais colisões
+        RaycastHit2D[] ray2 = new RaycastHit2D[2];
+        RaycastHit2D[] ray3 = new RaycastHit2D[2];
+        Vector3 a = new Vector3(owner.transform.up.x + 2, owner.transform.up.y + 2, owner.transform.up.z).normalized;
+        Vector3 b = new Vector3(owner.transform.up.x - 2, owner.transform.up.y - 2, owner.transform.up.z).normalized;
+        Physics2D.Raycast(owner.transform.position, owner.transform.up.normalized, filter, ray1); // Aplicação do raycast
+        Physics2D.Raycast(owner.transform.position, owner.transform.right.normalized, filter, ray2); // Aplicação do raycast
+        Physics2D.Raycast(owner.transform.position, owner.transform.right.normalized*-1, filter, ray3); // Aplicação do raycast
 
-            if(Vector2.Distance(owner.transform.position, ray[1].collider.transform.position) < 20 && (ray[1].collider.CompareTag(bodyTag) || ray[1].collider.CompareTag(botTag)))
+        if (ray1[1] || ray2[1] || ray3[1]) // Agora é só tratar o Collider como seria feito normalmente
+        {
+
+            if(Vector2.Distance(owner.transform.position, ray1[1].collider.transform.position) < 2 && (ray1[1].collider.CompareTag(bodyTag) || ray1[1].collider.CompareTag(botTag)))
             {
                 waypoint = new Vector3(waypoint.x * -1, waypoint.y * -1, waypoint.z);
                // Debug.Log("invertendo");
+            }else
+            if (Vector2.Distance(owner.transform.position, ray2[1].collider.transform.position) < 2 && (ray2[1].collider.CompareTag(bodyTag) || ray2[1].collider.CompareTag(botTag)))
+            {
+                waypoint = new Vector3(waypoint.x * -1, waypoint.y * -1, waypoint.z);
+                // Debug.Log("invertendo");
+            }else
+            if (Vector2.Distance(owner.transform.position, ray3[1].collider.transform.position) < 2 && (ray3[1].collider.CompareTag(bodyTag) || ray3[1].collider.CompareTag(botTag)))
+            {
+                waypoint = new Vector3(waypoint.x * -1, waypoint.y * -1, waypoint.z);
+                // Debug.Log("invertendo");
             }
         }
 

@@ -786,8 +786,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 66cd5294d179eb04bb909d92843609e6, type: 2}
   - {fileID: 11400000, guid: 160418bca43e39d4c85ea4b4c53179e4, type: 2}
   OrbsPerSnake: 1
-  NumberSnakes: 30
-  OrbSpawnTime: 1
+  NumberSnakes: 100
+  OrbSpawnTime: 2
   orbPreFab: {fileID: 4286169683249845843, guid: df1a7f71960ecd34ebcb0ecc0199b600,
     type: 3}
   snakePrefab: {fileID: 3446147340356149058, guid: 56a82bf2644bf8b43ab1d445371d6ede,
